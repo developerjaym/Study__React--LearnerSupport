@@ -1,23 +1,74 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Article from "./article/Article";
+import Header from "./header/Header";
 
 function App() {
+  const sampleArticle = {
+    title: "What is a String?",
+    tags: ["Python", "Datatypes"],
+    question: {
+      id: 1,
+      type:"QUESTION",
+      content: "I'm confused by String. Should I use Strings in my program? ", // TODO use markdown,
+      upvotes: 10,
+      comments: [
+        {
+          id: 1,
+          content: "This.",
+          author: {
+            name: "monica4president",
+            rating: 5
+          }
+        },
+        {
+          id: 2,
+          content: "Why do you want a String? Strings are bad practice. This sounds like an XY problem.",
+          author: {
+            name: "user908235",
+            rating: 2
+          }
+        }
+      ],
+      timestamp: "2015-01-01T00:00:00.000Z",
+      author: {
+        name: "Jay",
+        rating: 5,
+      },
+    },
+    answers: [
+      {
+        id: 2,
+        type:"ANSWER",
+        content: "Quotations and stuff. Not important. Do not use.",
+        upvotes: 100,
+        comments: [],
+        timestamp: "2015-02-02T00:00:00.000Z",
+        selected: true,
+        author: {
+          name: "Tom",
+          rating: 2
+        }
+      },
+      {
+        id: 3,
+        type:"ANSWER",
+        content: "Check out this link. https://google.com",
+        upvotes: -3,
+        comments: [],
+        timestamp: "2015-02-03T00:00:00.000Z",
+        author: {
+          name: "Thomas",
+          rating: 5
+        }
+      },
+    ],
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <main>
+        <Article article={sampleArticle} />
+      </main>
     </div>
   );
 }

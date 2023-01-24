@@ -1,0 +1,39 @@
+.App-header {
+    background-color: white;
+    color: black;
+    height: 7vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: large;
+    padding: 0 1vmin 0 1vmin;
+    box-shadow: 0px 0px 6px 1px #000000a8;
+    column-gap: 0.5vmin;
+  }
+  
+  .App-logo {
+    height: 5vh;
+    pointer-events: none;
+  }
+
+  .app__title {
+    margin: 0;
+    font-size: large;
+  }
+  
+  
+  .search-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 0.25vmin;
+    margin-left: auto;
+  }
+
+  @media screen and (max-width: 600px) {
+    .app__title {
+      display: none;
+    }
+  }

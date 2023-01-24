@@ -1,0 +1,14 @@
+.author-metadata {
+    width: fit-content;
+    place-self: end;
+    padding: 1vmin;
+    border-radius: 4px;
+    grid-area: author;
+  }
+  .author-metadata--question {
+    background-color: lightblue;
+  }
+  
+  .author-metadata--answer {
+    background-color: antiquewhite;
+  }

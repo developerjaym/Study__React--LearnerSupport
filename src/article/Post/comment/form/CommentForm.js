@@ -1,19 +1,19 @@
 import "./CommentForm.css";
 
-export default function CommentForm({onSubmission, onCancel}) {
-    const onSubmit = event => {
+export default function CommentForm({onSubmit, onCancel}) {
+    const onFormSubmitted = event => {
         // TODO replace with yup, formik
         event.preventDefault();
         const formData = Object.fromEntries(new FormData(event.target));
-        onSubmission(formData);
+        onSubmit(formData);
     }
     return (
-        <form onSubmit={onSubmit}>
+        <form className="form" onSubmit={onFormSubmitted}>
             <label className="form__label">
                 <span className="label__text">Comment</span>
-                <input className="form__input" name="content"/>
+                <textarea className="form__input" name="content"></textarea>
             </label>
-            <button type="submit" className="button">Submit</button>
+            <button type="submit" className="button button--submit">Submit</button>
         </form>
     )
 }

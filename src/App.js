@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import "./App.css";
 import Article from "./article/Article";
+import LoadingSymbol from "./dialog/loading/LoadingSymbol";
 import Header from "./header/Header";
 
 function App() {
@@ -63,11 +65,20 @@ function App() {
       },
     ],
   };
+  const [article, setArticle] = useState(null)
+  // Simulating slowness
+  // TODO hit real API for data
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setArticle(sampleArticle)
+    }, 2000)
+    return () => window.clearTimeout(timer)
+  });
   return (
     <div className="App">
       <Header />
       <main>
-        <Article article={sampleArticle} />
+        {article ? <Article article={article} /> : <LoadingSymbol/>}
       </main>
     </div>
   );

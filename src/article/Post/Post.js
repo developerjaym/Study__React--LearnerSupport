@@ -35,7 +35,7 @@ export default function Post({ post }) {
         onCancel={() => setFormOpen(false)}
       >
         <CommentForm
-          onSubmission={(result) => console.log("Got a result", result)}
+          onSubmit={(result) => console.log("Got a result", result)}
         />
       </Dialog>
     </section>

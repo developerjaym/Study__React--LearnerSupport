@@ -11,6 +11,8 @@
     border-width: 1px;
 
     background-color: white;
+
+    min-width: 15rem;
 }
 
 .dialog__container[open] {
@@ -31,12 +33,18 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
+    column-gap: 1vmax;
 }
 
 .dialog__title {
     margin: 0;
 }
 
+.dialog__body {
+    padding: 1vmin;
+}
+
 .dialog__menu {
     margin: 0;
+    padding: 0;
 }

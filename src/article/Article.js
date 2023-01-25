@@ -1,6 +1,6 @@
 import "./Article.css";
 import ArticleHeader from "./header/ArticleHeader";
-import Post from "./Post/Post";
+import Post from "./post/Post";
 
 export default function Article({ article }) {
   return (

@@ -7,7 +7,7 @@
   grid-template-areas:
     "upvotes main main main main"
     "upvotes links empty empty empty"
-    "upvotes comment author author author"
+    "upvotes actions author author author"
     "nothing comments comments comments comments";
   grid-template-columns: 1fr 2fr 2fr 2fr 2fr;
   grid-template-rows: minmax(20vh, max-content) 60px 60px max-content;
@@ -39,8 +39,8 @@
 }
 .post__body {
   grid-area: main;
-
-  display: flex;
+  text-align: left;
+  /* display: flex; */
 }
 
 .post__comments {
@@ -54,12 +54,18 @@
   border-color: lightgray;
 }
 
+.action {
+  grid-area: actions;
+  place-self: start;
+  align-self: center;
+}
+
 @media screen and (max-width: 600px) {
   .post {
     grid-template-areas:
       "upvotes main main main main"
       "upvotes links empty empty empty"
-      "upvotes comment author author author"
+      "upvotes actions author author author"
       "comments comments comments comments comments";
   }
 }

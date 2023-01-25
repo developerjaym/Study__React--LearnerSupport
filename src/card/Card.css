@@ -1,0 +1,28 @@
+.card {
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    border-radius: 4px;
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+
+    padding: 1vmax;
+}
+
+.card__header {
+    width: 100%;
+}
+
+.card__title {
+    font-size: x-large;
+    text-align: left;
+}
+
+.card__subtitle {
+    text-align: left;
+    font-style: italic;
+}

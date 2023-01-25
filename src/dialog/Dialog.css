@@ -13,6 +13,7 @@
     background-color: white;
 
     min-width: 15rem;
+    max-width: 90%;
 }
 
 .dialog__container[open] {
@@ -26,6 +27,10 @@
     justify-content: center;
 
     background-color: rgba(0, 0, 0, 0.15);
+    margin: 0;
+
+    box-sizing: border-box;
+    border: none;
 }
 
 .dialog__header {

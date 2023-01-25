@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import CreatePost from "../article/post/create/form/CreateQuestionForm";
 import LoginModal from "../authenticate/modal/LoginModal";
 import SignUpModal from "../authenticate/modal/SignUpModal";
+import Dialog from "../dialog/Dialog";
 import logo from "../logo.jpg";
 import "./Header.css";
 
 export default function Header() {
+  const navigator = useNavigate()
   const [isLoginOpen, setLoginOpen] = useState(false);
   const [isSignUpOpen, setSignUpOpen] = useState(false);
   return (
@@ -20,6 +24,9 @@ export default function Header() {
       </button>
       <button className="button" onClick={(e) => setSignUpOpen(true)}>
         Sign Up
+      </button>
+      <button className="button" onClick={(e) => navigator("/ask")}>
+        +Ask Question
       </button>
       <SignUpModal
         open={isSignUpOpen}

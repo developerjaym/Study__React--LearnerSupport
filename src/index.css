@@ -23,10 +23,25 @@ code {
   background-color: transparent;
 }
 
+.markdown-container {
+  display: block;
+  text-align: left;
+  overflow-y: auto;
+}
+
+.form__title {
+  font-size: x-large;
+  font-weight: bold;
+}
+
 .form {
   display: flex;
   flex-direction: column;
   row-gap: 1vmin;
+
+  width: 600px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form__label {
@@ -41,6 +56,10 @@ code {
   align-self: stretch;
 }
 
+.form__input--tall {
+  height: 240px;
+}
+
 .button--submit {
   background-color: coral;
 }
@@ -50,6 +69,14 @@ code {
   animation-duration: 1s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
+}
+
+.page {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 1vmax;
+  width: 100%;
 }
 
 @keyframes rotate {

@@ -1,8 +1,10 @@
+import { useLoaderData } from "react-router-dom";
 import "./Article.css";
 import ArticleHeader from "./header/ArticleHeader";
 import Post from "./post/Post";
 
-export default function Article({ article }) {
+export default function Article() {
+  const article = useLoaderData();
   return (
     <article className="article">
       <ArticleHeader article={article} />

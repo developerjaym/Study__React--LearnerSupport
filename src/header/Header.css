@@ -13,12 +13,13 @@
   }
   
   .App-logo {
-    pointer-events: none;
+    cursor: pointer;
   }
 
   .app__title {
     margin: 0;
     font-size: large;
+    cursor: pointer;
   }
   
   

@@ -6,6 +6,7 @@ export default function CommentForm({onSubmit, onCancel}) {
         event.preventDefault();
         const formData = Object.fromEntries(new FormData(event.target));
         onSubmit(formData);
+        event.target.reset()
     }
     return (
         <form className="form" onSubmit={onFormSubmitted}>

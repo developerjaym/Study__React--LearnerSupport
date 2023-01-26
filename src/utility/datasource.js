@@ -21,7 +21,7 @@ class Datasource {
     const newArticle = {
       question,
       id: ++Datasource.#id_counter,
-      timestamp: new Date().toISOString(),
+      timestamp: this.#timestamp(),
       tags,
       title: question.title,
       answers: [],
@@ -44,16 +44,34 @@ class Datasource {
     article.answers.push(answer);
     return answer;
   }
-  addComment(articleId, postId, comment) {
+  addComment(postId, comment) {
     comment.id = ++Datasource.#id_counter;
-    const article = this.articles.find(
-      (article) => article.id === Number(articleId)
+    comment.author = {
+      name: "COMMENTER", // TODO
+      rating: 5
+    }
+    const post = this.#findPost(postId);
+    post.comments.push(comment);
+  }
+  vote(postId, up) {
+    const post = this.#findPost(postId)
+    post.upvotes = post.upvotes + (up ? 1 : -1);
+  }
+  #findPost(postId) {
+    return this.articles
+      .map((article) => [article.question, ...article.answers])
+      .flat()
+      .find((post) => post.id === Number(postId));
+  }
+  #findArticle(postId) {
+    return this.articles.find(
+      (article) =>
+        article.question.id === Number(postId) ||
+        article.answers.find((answer) => answer.id === Number(postId))
     );
-    const post =
-      article.question.id === Number(postId)
-        ? article.question
-        : article.answers.find((answer) => answer.id === Number(postId));
-    post.comments.push(post);
+  }
+  #timestamp() {
+    return new Date().toISOString();
   }
   isSelectable(answerId) {
     return this.articles
@@ -111,7 +129,7 @@ const datasource = new Datasource([
           },
         },
       ],
-      
+
       author: {
         name: "Jay",
         rating: 5,

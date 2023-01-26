@@ -25,4 +25,5 @@
     background-color: lightblue;
     padding: 0.5vmax;
     border-radius: 4px;
+    cursor: pointer;
   }

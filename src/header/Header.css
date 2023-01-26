@@ -23,7 +23,7 @@
   }
   
   
-  .search-bar {
+  .search-bar, .search-bar label {
     display: flex;
     flex-direction: row;
     justify-content: center;

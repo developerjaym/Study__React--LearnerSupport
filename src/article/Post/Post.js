@@ -21,12 +21,25 @@ export default function Post({ post, onAnswerCreated }) {
     datasource.deselectAnswer(post.id);
     setPostState({ ...postState, selected: false });
   };
+  const addComment = (comment) => {
+    datasource.addComment(post.id, comment)
+    setPostState({
+      ...postState
+    })
+    setFormOpen(false);
+  }
+  const onVote = (up) => (e) => {
+    datasource.vote(post.id, up)
+    setPostState({
+      ...postState
+    })
+  }
   return (
     <section className={`post ${post.upvotes < 0 ? "post--downvoted" : ""}`}>
       <div className="post__upvotes">
-        <div className="upvotes--up">▲</div>
+        <button className="button upvotes--up" onClick={onVote(true)}>▲</button>
         <div className="upvotes__total">{post.upvotes}</div>
-        <div className="upvotes--down">▼</div>
+        <button className="button upvotes--down" onClick={onVote(false)}>▼</button>
         {post.selected ? <div className="selected">✅</div> : <></>}
       </div>
       <div className="post__body">
@@ -68,7 +81,7 @@ export default function Post({ post, onAnswerCreated }) {
         onCancel={() => setFormOpen(false)}
       >
         <CommentForm
-          onSubmit={(result) => console.log("Got a result", result)}
+          onSubmit={(result) => addComment(result)}
         />
       </Dialog>
       <Dialog

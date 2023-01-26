@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import remarkGfm from "remark-gfm";
 import Dialog from "../../../../dialog/Dialog";
@@ -33,6 +33,7 @@ A note[^1]
 * [x] done    `;
   const [isPreviewOpen, setPreviewOpen] = useState(false);
   const [value, setValue] = useState({});
+  const formRef = useRef()
   const onQuestionCreated = (event) => {
     event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target));
@@ -43,7 +44,7 @@ A note[^1]
   // TODO tags
   return (
     <>
-      <form className="form" onSubmit={onQuestionCreated}>
+      <form className="form" onSubmit={onQuestionCreated} ref={formRef}>
         <span className="form__title">Create a Question</span>
         <label className="form__label">
           <span className="label__text">Title</span>
@@ -73,7 +74,12 @@ A note[^1]
         </div>
         <button
           className="button button--submit"
-          onClick={(e) => onSubmit(value)}
+          onClick={(e) => {
+            onSubmit(value);
+            formRef.current.reset();
+            setValue({})
+            setPreviewOpen(false)
+          }}
         >
           Submit
         </button>

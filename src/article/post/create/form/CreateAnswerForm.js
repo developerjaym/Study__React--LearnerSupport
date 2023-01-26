@@ -47,6 +47,7 @@ A note[^1]
             name="content"
             className="form__input form__input--tall"
             defaultValue={example}
+            required
           />
         </label>
         <button type="submit" className="button button--submit">

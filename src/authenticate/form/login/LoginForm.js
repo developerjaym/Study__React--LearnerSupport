@@ -11,11 +11,11 @@ export default function LoginForm({onSubmit}) {
         <form className="form" onSubmit={onFormSubmitted}>
             <label className="form__label">
                 <span className="label__text">Username</span>
-                <input className="form__input" name="username" autoComplete="current-username"/>
+                <input className="form__input" name="username" autoComplete="current-username" required/>
             </label>
             <label className="form__label">
                 <span className="label__text">Password</span>
-                <input className="form__input" name="password" type="password" autoComplete="current-password"/>
+                <input required className="form__input" name="password" type="password" autoComplete="current-password"/>
             </label>
             <button type="submit" className="button button--submit">Submit</button>
         </form>

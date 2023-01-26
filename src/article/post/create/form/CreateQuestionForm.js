@@ -40,13 +40,14 @@ A note[^1]
     setValue(formData);
     
   };
+  // TODO tags
   return (
     <>
       <form className="form" onSubmit={onQuestionCreated}>
         <span className="form__title">Create a Question</span>
         <label className="form__label">
           <span className="label__text">Title</span>
-          <input className="form__input" name="title" />
+          <input className="form__input" name="title" required minLength={3}/>
         </label>
         <label className="form__label">
           <span className="label__text">Question</span>
@@ -54,6 +55,8 @@ A note[^1]
             name="content"
             className="form__input form__input--tall"
             defaultValue={example}
+            minLength={12}
+            required
           />
         </label>
         <button type="submit" className="button button--submit">

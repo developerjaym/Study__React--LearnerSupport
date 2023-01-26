@@ -11,7 +11,7 @@ export default function CommentForm({onSubmit, onCancel}) {
         <form className="form" onSubmit={onFormSubmitted}>
             <label className="form__label">
                 <span className="label__text">Comment</span>
-                <textarea className="form__input" name="content"></textarea>
+                <textarea className="form__input" name="content" required></textarea>
             </label>
             <button type="submit" className="button button--submit">Submit</button>
         </form>

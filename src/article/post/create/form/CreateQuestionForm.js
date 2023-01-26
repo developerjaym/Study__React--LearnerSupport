@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { useNavigate } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import Dialog from "../../../../dialog/Dialog";
-import { datasource } from "../../../../utility/datasource";
 import "./CreatePostForm.css";
 
-export default function CreateQuestionForm() {
+export default function CreateQuestionForm({onSubmit}) {
   const example = `
 # GFM
 
@@ -35,18 +33,16 @@ A note[^1]
 * [x] done    `;
   const [isPreviewOpen, setPreviewOpen] = useState(false);
   const [value, setValue] = useState({});
-  const navigate = useNavigate();
-  const onSubmit = (event) => {
+  const onQuestionCreated = (event) => {
     event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target));
     setPreviewOpen(true);
     setValue(formData);
-    datasource.addArticle(formData)
-    navigate("/")
+    
   };
   return (
     <>
-      <form className="form" onSubmit={onSubmit}>
+      <form className="form" onSubmit={onQuestionCreated}>
         <span className="form__title">Create a Question</span>
         <label className="form__label">
           <span className="label__text">Title</span>
@@ -74,7 +70,7 @@ A note[^1]
         </div>
         <button
           className="button button--submit"
-          onClick={(e) => console.log("submit?")}
+          onClick={(e) => onSubmit(value)}
         >
           Submit
         </button>

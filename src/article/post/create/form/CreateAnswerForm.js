@@ -3,7 +3,7 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import Dialog from "../../../../dialog/Dialog";
 import "./CreatePostForm.css";
 
-export default function CreateAnswerForm() {
+export default function CreateAnswerForm({onSubmit}) {
   const example = `
 # GFM
 
@@ -32,7 +32,7 @@ A note[^1]
 * [x] done    `;
   const [isPreviewOpen, setPreviewOpen] = useState(false);
   const [value, setValue] = useState({});
-  const onSubmit = (event) => {
+  const onReadyToPreview = (event) => {
     event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target));
     setPreviewOpen(true);
@@ -40,7 +40,7 @@ A note[^1]
   };
   return (
     <>
-      <form className="form" onSubmit={onSubmit}>
+      <form className="form" onSubmit={onReadyToPreview}>
         <label className="form__label">
           <span className="label__text">Answer</span>
           <textarea
@@ -63,7 +63,7 @@ A note[^1]
         </div>
         <button
           className="button button--submit"
-          onClick={(e) => console.log("submit?")}
+          onClick={(e) => onSubmit(value)}
         >
           Submit
         </button>

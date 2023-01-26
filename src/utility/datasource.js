@@ -4,10 +4,10 @@ class Datasource {
     this.articles = articles;
   }
   getAll() {
-    return structuredClone(this.articles)
+    return structuredClone(this.articles);
   }
   getArticle(articleId) {
-    return this.articles.find(article => article.id === Number(articleId))
+    return this.articles.find((article) => article.id === Number(articleId));
   }
   addArticle(tags, question) {
     question.id = ++Datasource.#id_counter;
@@ -21,12 +21,13 @@ class Datasource {
     const newArticle = {
       question,
       id: ++Datasource.#id_counter,
-      timestamp: new Date().toUTCString(),
+      timestamp: new Date().toISOString(),
       tags,
       title: question.title,
       answers: [],
     };
     this.articles.push(newArticle);
+    return newArticle;
   }
   addAnswer(articleId, answer) {
     answer.author = {
@@ -41,6 +42,7 @@ class Datasource {
       (article) => article.id === Number(articleId)
     );
     article.answers.push(answer);
+    return answer;
   }
   addComment(articleId, postId, comment) {
     comment.id = ++Datasource.#id_counter;
@@ -53,25 +55,42 @@ class Datasource {
         : article.answers.find((answer) => answer.id === Number(postId));
     post.comments.push(post);
   }
-  selectAnswer(articleId, answerId) {
-    const article = this.articles.find(
-      (article) => article.id === Number(articleId)
+  isSelectable(answerId) {
+    return this.articles
+      .find((article) =>
+        article.answers.find((answer) => answer.id === Number(answerId))
+      )
+      .answers.every((answer) => !answer.selected);
+  }
+  selectAnswer(answerId) {
+    if (this.isSelectable(answerId)) {
+      const article = this.articles.find((article) =>
+        article.answers.find((answer) => answer.id === Number(answerId))
+      );
+      article.answers.forEach(
+        (answer) => (answer.selected = answer.id === Number(answerId))
+      );
+    }
+  }
+  deselectAnswer(answerId) {
+    const article = this.articles.find((article) =>
+      article.answers.find((answer) => answer.id === Number(answerId))
     );
-    const answer = article.answers.find(
-      (answer) => answer.id === Number(answerId)
-    );
-    answer.selected = true;
+    article.answers.forEach((answer) => (answer.selected = false));
   }
 }
 
-const datasource = new Datasource([{
-    id: 1, 
+const datasource = new Datasource([
+  {
+    id: 1,
     title: "What is a String?",
     tags: ["Python", "Datatypes"],
+    timestamp: "2015-01-01T00:00:00.000Z",
     question: {
       id: 2,
-      type:"QUESTION",
-      content: "I'm confused by ```String```. Should I use Strings in my program?",
+      type: "QUESTION",
+      content:
+        "I'm confused by ```String```. Should I use Strings in my program?",
       upvotes: 10,
       comments: [
         {
@@ -79,19 +98,20 @@ const datasource = new Datasource([{
           content: "This.",
           author: {
             name: "monica4president",
-            rating: 5
-          }
+            rating: 5,
+          },
         },
         {
           id: 4,
-          content: "Why do you want a String? Strings are bad practice. This sounds like an XY problem.",
+          content:
+            "Why do you want a String? Strings are bad practice. This sounds like an XY problem.",
           author: {
             name: "user908235",
-            rating: 2
-          }
-        }
+            rating: 2,
+          },
+        },
       ],
-      timestamp: "2015-01-01T00:00:00.000Z",
+      
       author: {
         name: "Jay",
         rating: 5,
@@ -100,7 +120,7 @@ const datasource = new Datasource([{
     answers: [
       {
         id: 5,
-        type:"ANSWER",
+        type: "ANSWER",
         content: `Strings are for *quotations* and **other things**.
         
   # DO NOT USE 
@@ -115,23 +135,23 @@ const datasource = new Datasource([{
         selected: true,
         author: {
           name: "Tom",
-          rating: 2
-        }
+          rating: 2,
+        },
       },
       {
         id: 6,
-        type:"ANSWER",
+        type: "ANSWER",
         content: "Check out this link. https://google.com",
         upvotes: -3,
         comments: [],
         timestamp: "2015-02-03T00:00:00.000Z",
         author: {
           name: "Thomas",
-          rating: 5
-        }
+          rating: 5,
+        },
       },
     ],
-  }]);
+  },
+]);
 
-
-export {datasource}
+export { datasource };

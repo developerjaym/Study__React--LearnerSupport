@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import App from "./App";
 import Article from "./article/Article";
-import CreatePostPage from "./article/post/create/page/CreateQuestionPage";
+import CreateQuestionPage from "./article/post/create/page/CreateQuestionPage";
 import Home from "./home/Home";
 import "./index.css";
 import { datasource } from "./utility/datasource";
@@ -26,7 +26,7 @@ const router = createHashRouter([
       },
       {
         path:"/ask",
-        element: <CreatePostPage/>
+        element: <CreateQuestionPage/>
       },
       {
         path:"/",

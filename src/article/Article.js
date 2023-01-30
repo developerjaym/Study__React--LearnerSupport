@@ -12,7 +12,7 @@ export default function Article() {
     answer = datasource.addAnswer(article.id, answer);
     setArticle({
       ...article,
-      answers: [...article.answers],
+      posts: [...article.posts],
     });
   };
   return (
@@ -20,11 +20,12 @@ export default function Article() {
       <ArticleHeader article={article} />
       <Post
         key="question"
-        post={article.question}
+        articleId={article.id}
+        post={article.posts.find(post => post.type==='QUESTION')}
         onAnswerCreated={onAnswerCreated}
       />
-      {article.answers.map((answer) => (
-        <Post key={"answer" + answer.id} post={answer} />
+      {article.posts.filter(post => post.type === 'ANSWER').map((answer) => (
+        <Post key={"answer" + answer.id} post={answer} articleId={article.id}/>
       ))}
     </article>
   );

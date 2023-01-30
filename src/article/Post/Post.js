@@ -8,28 +8,29 @@ import CommentForm from "./comment/form/CommentForm";
 import CreateAnswerForm from "../post/create/form/CreateAnswerForm";
 import "./Post.css";
 import { datasource } from "../../utility/datasource";
+import { authentication } from "../../utility/authentication";
 
-export default function Post({ post, onAnswerCreated }) {
+export default function Post({ post, onAnswerCreated, articleId }) {
   const [isFormOpen, setFormOpen] = useState(false);
   const [postState, setPostState] = useState(post);
   const [isAnswerFormOpen, setAnswerFormOpen] = useState(false);
   const selectAsAnswer = () => {
-    datasource.selectAnswer(post.id);
+    datasource.selectAnswer(articleId, post.id);
     setPostState({ ...postState, selected: true });
   };
   const deselectAsAnswer = () => {
-    datasource.deselectAnswer(post.id);
+    datasource.deselectAnswer(articleId, post.id);
     setPostState({ ...postState, selected: false });
   };
   const addComment = (comment) => {
-    datasource.addComment(post.id, comment)
+    datasource.addComment(articleId, post.id, comment)
     setPostState({
       ...postState
     })
     setFormOpen(false);
   }
   const onVote = (up) => (e) => {
-    datasource.vote(post.id, up)
+    datasource.vote(articleId, post.id, up)
     setPostState({
       ...postState
     })
@@ -37,8 +38,8 @@ export default function Post({ post, onAnswerCreated }) {
   return (
     <section className={`post ${post.upvotes < 0 ? "post--downvoted" : ""}`}>
       <div className="post__upvotes">
-        <button className="button upvotes--up" onClick={onVote(true)}>▲</button>
-        <div className="upvotes__total">{post.upvotes}</div>
+        <button className="button upvotes--up" onClick={onVote(true)} disabled={!authentication.loggedIn}>▲</button>
+        <div className="upvotes__total">{post.votes.length}</div>
         <button className="button upvotes--down" onClick={onVote(false)}>▼</button>
         {post.selected ? <div className="selected">✅</div> : <></>}
       </div>
@@ -54,7 +55,7 @@ export default function Post({ post, onAnswerCreated }) {
             setAnswerFormOpen(true);
           }}
         >
-          +Answer
+          +Add Answer
         </button>
       ) : post.selected ? (
         <button className="button action" onClick={(e) => deselectAsAnswer()}>

@@ -44,7 +44,6 @@ export default function Header() {
             className="button"
             onClick={(e) => {
               authentication.signOut();
-              navigate("/");
             }}
           >
             Sign Out
@@ -63,16 +62,16 @@ export default function Header() {
       <SignUpModal
         open={isSignUpOpen}
         onCancel={() => setSignUpOpen(false)}
-        onSuccess={(creds) => {
-          authentication.signUp(creds);
+        onSuccess={async (creds) => {
+          await authentication.signUp(creds);
           setSignUpOpen(false);
         }}
       />
       <LoginModal
         open={isLoginOpen}
         onCancel={() => setLoginOpen(false)}
-        onSuccess={(creds) => {
-          authentication.logIn(creds);
+        onSuccess={async (creds) => {
+          await authentication.logIn(creds);
           setLoginOpen(false);
         }}
       />

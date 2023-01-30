@@ -11,12 +11,13 @@ export default function Home() {
     : "";
   const articles = datasource
     .getAll()
-    .filter(
-      (article) =>
-        normalize(article.title).includes(normalize(searchTerm)) ||
-        normalize(article.question.content).includes(normalize(searchTerm)) ||
-        article.tags.map(normalize).includes(normalize(searchTerm))
-    );
+  //   .filter(
+  //     (article) =>
+  //       normalize(article.title).includes(normalize(searchTerm)) ||
+  //       normalize(article.posts.find(post => post.type === 'QUESTION').content).includes(normalize(searchTerm)) ||
+  //       article.tags.map(normalize).includes(normalize(searchTerm))
+    // );
+    // const articles = []
   return (
     <div className="page page--search-results">
       <div className="search-results">

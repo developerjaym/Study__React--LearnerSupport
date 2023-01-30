@@ -33,7 +33,7 @@ const router = createHashRouter([
         element: <Home/>
       },
     ],
-    errorElement:  <Navigate to="/" replace/>
+    errorElement:  <div className="page"><h1>ERROR</h1></div>
   },
   
   {

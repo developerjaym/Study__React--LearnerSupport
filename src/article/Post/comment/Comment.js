@@ -5,7 +5,7 @@ export default function Comment({ comment }) {
     <div className="comment">
       <div className="comment__body">{comment.content}</div>
       <div className="comment__metadata">
-        <a className="comment__author">{comment.author.name}</a>
+        <a className="comment__author">{comment.author.username}</a>
       </div>
     </div>
   );

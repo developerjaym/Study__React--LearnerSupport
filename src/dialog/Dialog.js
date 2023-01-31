@@ -1,5 +1,5 @@
 import "./Dialog.css";
-import logo from "../logo.jpg";
+import logo from "../logo.svg";
 
 export default function Dialog({ title, open, children, onCancel }) {
   return (

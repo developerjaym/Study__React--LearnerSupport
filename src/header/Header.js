@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "../authenticate/modal/LoginModal";
 import SignUpModal from "../authenticate/modal/SignUpModal";
-import logo from "../logo.jpg";
+import logo from "../logo.svg";
 import { authentication } from "../utility/authentication";
 import "./Header.css";
 

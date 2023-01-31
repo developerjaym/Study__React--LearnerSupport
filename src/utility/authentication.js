@@ -59,11 +59,15 @@ class AuthenticationService {
       body: raw,
       redirect: "follow",
     };
-
-    const response = await fetch("http://127.0.0.1:5000/users", requestOptions);
-    const result = await response.json();
-    localStorage.setItem(AuthenticationService.#key, result.token)
-    this.#user = this.#tokenToUser(result.token);
+      const response = await fetch("http://127.0.0.1:5000/users", requestOptions);
+      if(response.ok) {
+        const result = await response.json();
+        localStorage.setItem(AuthenticationService.#key, result.token)
+        this.#user = this.#tokenToUser(result.token);
+      } else {
+        console.error(response.status, response.statusText)
+        throw Error('Unable to sign up')
+      }
   }
   signOut() {
     this.#user = null;

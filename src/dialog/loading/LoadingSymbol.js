@@ -1,4 +1,4 @@
-import logo from "../../logo.jpg";
+import logo from "../../logo.svg";
 import "./LoadingSymbol.css";
 
 export default function LoadingSymbol() {

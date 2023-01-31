@@ -10,11 +10,11 @@ export default function Header() {
   const navigate = useNavigate();
   const [isLoginOpen, setLoginOpen] = useState(false);
   const [isSignUpOpen, setSignUpOpen] = useState(false);
-  const loggedIn = authentication.loggedIn;
+  const [loggedIn, setLoggedIn] = useState(authentication.loggedIn);
   const onSearch = (event) => {
     event.preventDefault();
     const formData = Object.fromEntries(new FormData(event.target));
-    navigate(`/?term=${formData.term}`)
+    navigate(`/?term=${formData.term}`);
   };
   return (
     <header className="App-header">
@@ -44,6 +44,8 @@ export default function Header() {
             className="button"
             onClick={(e) => {
               authentication.signOut();
+              setLoggedIn(false);
+              navigate("/");
             }}
           >
             Sign Out
@@ -65,6 +67,8 @@ export default function Header() {
         onSuccess={async (creds) => {
           await authentication.signUp(creds);
           setSignUpOpen(false);
+          setLoggedIn(true);
+          window.location.reload();
         }}
       />
       <LoginModal
@@ -73,6 +77,8 @@ export default function Header() {
         onSuccess={async (creds) => {
           await authentication.logIn(creds);
           setLoginOpen(false);
+          setLoggedIn(true);
+          window.location.reload();
         }}
       />
     </header>

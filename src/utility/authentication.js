@@ -4,7 +4,6 @@ class AuthenticationService {
   constructor() {
     const token = localStorage.getItem(AuthenticationService.#key);
     this.#user = this.#tokenToUser(token);
-    console.log('this.user', this.#user);
     // otherwise, user is null
   }
   #tokenToUser(token) {
@@ -67,8 +66,8 @@ class AuthenticationService {
     this.#user = this.#tokenToUser(result.token);
   }
   signOut() {
-    // this.#user = null;
-    // localStorage.removeItem(AuthenticationService.#key);
+    this.#user = null;
+    localStorage.removeItem(AuthenticationService.#key);
   }
 }
 

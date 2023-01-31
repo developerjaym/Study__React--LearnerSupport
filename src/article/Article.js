@@ -8,13 +8,16 @@ import Post from "./post/Post";
 export default function Article() {
   const loadedArticle = useLoaderData();
   const [article, setArticle] = useState(loadedArticle);
-  const onAnswerCreated = (answer) => {
-    answer = datasource.addAnswer(article.id, answer);
+  const onAnswerCreated = async (answer) => {
+    answer = await datasource.addAnswer(article.id, answer);
     setArticle({
       ...article,
-      posts: [...article.posts],
+      posts: [...article.posts, answer],
     });
   };
+  const onSelectOrDeselect = () => {
+    setArticle({...datasource.article})
+  }
   return (
     <article className="article">
       <ArticleHeader article={article} />
@@ -25,7 +28,7 @@ export default function Article() {
         onAnswerCreated={onAnswerCreated}
       />
       {article.posts.filter(post => post.type === 'ANSWER').map((answer) => (
-        <Post key={"answer" + answer.id} post={answer} articleId={article.id}/>
+        <Post key={"answer" + answer.id} post={answer} articleId={article.id} onSelectOrDeselect={onSelectOrDeselect}/>
       ))}
     </article>
   );

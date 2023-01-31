@@ -1,93 +1,169 @@
 import { authentication } from "./authentication";
 
 class Datasource {
-  static #id_counter = 999;
-  constructor(articles = []) {
-    this.articles = articles;
+  #articleCache;
+  
+  get article() {
+    return structuredClone(this.#articleCache)
   }
-  getAll() {
-    return structuredClone(this.articles);
-  }
-  getArticle(articleId) {
-    return this.articles.find((article) => article.id === Number(articleId));
-  }
-  addArticle(tags, question) {
-    question.id = ++Datasource.#id_counter;
-    question.author = authentication.user;
-    question.comments = [];
-    question.upvotes = 0;
-    question.type = "QUESTION";
-    const newArticle = {
-      posts: [question],
-      id: ++Datasource.#id_counter,
-      timestamp: this.#timestamp(),
-      tags,
-      title: question.title,
-      answers: [],
+  async getAll() {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
     };
-    this.articles.push(newArticle);
-    return newArticle;
+    
+    const response = await fetch("http://127.0.0.1:5000/articles", requestOptions)
+    const articles = await response.json();
+    return articles;
   }
-  addAnswer(articleId, answer) {
-    answer.author = authentication.user;
-    answer.type = "ANSWER";
-    answer.comments = [];
-    answer.upvotes = 0;
-    answer.id = ++Datasource.#id_counter;
-    const article = this.articles.find(
-      (article) => article.id === Number(articleId)
-    );
-    article.posts.push(answer);
-    return answer;
+  async getArticle(articleId) {
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}`, requestOptions)
+    const article = await response.json();
+    this.#articleCache = article;
+    return article;
   }
-  addComment(articleId, postId, comment) {
-    comment.id = ++Datasource.#id_counter;
-    comment.author = authentication.user;
-    const post = this.#findPost(postId);
-    post.comments.push(comment);
-    console.log('comment', comment);
+  async addArticle(tags, question) {
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${authentication.token}`);
+    myHeaders.append("Content-Type", "application/json");
+    
+    const makeMe =  {
+      title: question.title,
+      tags, // TODO tags
+      posts: [question]
+    }
+    var raw = JSON.stringify(makeMe);
+    
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    const response = await fetch("http://127.0.0.1:5000/articles", requestOptions)
+    const article = await response.json()
+    return article;
   }
-  vote(articleId, postId, up) {
-    const post = this.#findPost(postId);
-    post.upvotes = post.upvotes + (up ? 1 : -1);
+  async addAnswer(articleId, answer) {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${authentication.token}`);
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify(answer);
+    
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/answers`, requestOptions)
+    const post = await response.json()
+    this.#articleCache.posts.push(post);
+    return post;
   }
-  #findPost(postId) {
-    return this.articles
-      .map((article) => article.posts)
-      .flat()
-      .find((post) => post.id === Number(postId));
+  async addComment(articleId, postId, comment) {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${authentication.token}`);
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify(comment);
+    
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/posts/${postId}/comments`, requestOptions)
+    comment = await response.json()
+    this.#articleCache.posts.find(post => post.id === postId).comments.push(comment);
+    return comment;
   }
-  #findArticle(postId) {
-    return this.articles.find(
-      (article) =>
-        article.posts.find((post) => post.id === Number(postId))
-    );
+  async vote(articleId, postId, up) {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${authentication.token}`);
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify({up});
+    
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/posts/${postId}/votes`, requestOptions)
+    const voteResponse = await response.json()
+    this.#articleCache.posts.find(post => post.id === postId).votes = this.#articleCache.posts.find(post => post.id === postId).votes.filter(vote => vote.author.username !== authentication.user.username);
+    this.#articleCache.posts.find(post => post.id === postId).votes.push(voteResponse);
+    return voteResponse;
   }
-  #timestamp() {
-    return new Date().toISOString();
-  }
-  isSelectable(answerId) {
-    return this.articles
-      .find((article) =>
-        article.posts.filter(post => post.type === 'ANSWER').find((answer) => answer.id === Number(answerId))
-      )
-      .posts.filter(post => post.type === 'ANSWER').every((answer) => !answer.selected);
-  }
-  selectAnswer(articleId, answerId) {
-    if (this.isSelectable(answerId)) {
-      const article = this.articles.find((article) =>
-        article.posts.find((answer) => answer.id === Number(answerId))
-      );
-      article.posts.filter(post => post.type === 'ANSWER').forEach(
-        (answer) => (answer.selected = answer.id === Number(answerId))
-      );
+  
+  async selectAnswer(articleId, postId) {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${authentication.token}`);
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify({});
+    
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };
+    
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/posts/${postId}/selected`, requestOptions)
+      await response.text()
+      this.#articleCache?.posts?.forEach(post => post.selected = post.id === postId)
+      return true;
+    } catch(e) {
+      return false;
     }
   }
-  deselectAnswer(articleId, answerId) {
-    const article = this.articles.find((article) =>
-      article.posts.find((answer) => answer.id === Number(answerId))
-    );
-    article.posts.filter(post => post.type === 'ANSWER').forEach((answer) => (answer.selected = false));
+  async deselectAnswer(articleId, postId) {
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${authentication.token}`);
+    myHeaders.append("Content-Type", "application/json");
+        
+    var requestOptions = {
+      method: 'DELETE',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+    
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/posts/${postId}/selected`, requestOptions)
+      await response.text()
+      this.#articleCache?.posts?.forEach(post => post.selected = false)
+      return true;
+    } catch(e) {
+      return false;
+    }
+  }
+  isSelectable(articleId) {
+    if(this.#articleCache?.id === articleId && this.#articleCache?.posts?.find(post => post.type === 'QUESTION')?.author?.username === authentication.user.username) {
+      return this.#articleCache.posts.every(post => !post.selected)
+    }
+    return true;
+  }
+  isDeselectable(articleId, postId) {
+    if(this.#articleCache?.id === articleId && this.#articleCache?.posts?.find(post => post.type === 'QUESTION')?.author?.username === authentication.user.username) {
+      return this.#articleCache.posts.some(post => post.id === postId && post.selected)
+    }
+    return true;
   }
 }
 

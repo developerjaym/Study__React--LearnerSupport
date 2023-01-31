@@ -22,7 +22,7 @@ const router = createHashRouter([
       {
         path:"/question/:id",
         element: <Article/>,
-        loader: ({request, params}) => {return datasource.getArticle(params.id)}
+        loader: async ({request, params}) => {return await datasource.getArticle(params.id)}
       },
       {
         path:"/ask",
@@ -30,7 +30,8 @@ const router = createHashRouter([
       },
       {
         path:"/",
-        element: <Home/>
+        element: <Home/>,
+        loader: async ({request, params}) => {return await datasource.getAll()}
       },
     ],
     errorElement:  <div className="page"><h1>ERROR</h1></div>

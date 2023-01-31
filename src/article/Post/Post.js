@@ -10,83 +10,124 @@ import "./Post.css";
 import { datasource } from "../../utility/datasource";
 import { authentication } from "../../utility/authentication";
 
-export default function Post({ post, onAnswerCreated, articleId }) {
+export default function Post({ post, onAnswerCreated, articleId, onSelectOrDeselect }) {
   const [isFormOpen, setFormOpen] = useState(false);
   const [postState, setPostState] = useState(post);
   const [isAnswerFormOpen, setAnswerFormOpen] = useState(false);
-  const selectAsAnswer = () => {
-    datasource.selectAnswer(articleId, post.id);
-    setPostState({ ...postState, selected: true });
+  const countVotes = (votes) =>
+    votes
+      .map((vote) => vote.up)
+      .reduce((pre, cur) => (cur ? pre + 1 : pre - 1), 0);
+  const selectAsAnswer = async () => {
+    const result = await datasource.selectAnswer(articleId, postState.id);
+    if (result) {
+      setPostState({ ...postState, selected: true });
+      onSelectOrDeselect()
+    }
   };
-  const deselectAsAnswer = () => {
-    datasource.deselectAnswer(articleId, post.id);
-    setPostState({ ...postState, selected: false });
+  const deselectAsAnswer = async () => {
+    const result = await datasource.deselectAnswer(articleId, postState.id);
+    if (result) {
+      setPostState({ ...postState, selected: false });
+      onSelectOrDeselect()
+    }
   };
-  const addComment = (comment) => {
-    datasource.addComment(articleId, post.id, comment)
+  const addComment = async (comment) => {
+    const commentResponse = await datasource.addComment(
+      articleId,
+      postState.id,
+      comment
+    );
     setPostState({
-      ...postState
-    })
+      ...postState,
+      comments: [...postState.comments, commentResponse],
+    });
     setFormOpen(false);
-  }
+  };
   const onVote = (up) => (e) => {
-    datasource.vote(articleId, post.id, up)
-    setPostState({
-      ...postState
-    })
-  }
+    datasource.vote(articleId, postState.id, up).then((voteResponse) => {
+      setPostState({
+        ...postState,
+        votes: [...postState.votes.filter(vote => vote.author.username !== authentication.user.username), voteResponse],
+      });
+    });
+  };
+  const disableSelect = !authentication.loggedIn || !datasource.isSelectable(articleId);
+  const disableDeselect = !authentication.loggedIn || !datasource.isDeselectable(articleId, postState.id);
+  const disableUpvote = !authentication.loggedIn || postState.votes.filter(vote => vote.up).some(vote => vote.author.username === authentication.user.username);
+  const disableDownvote = !authentication.loggedIn || postState.votes.filter(vote => !vote.up).some(vote => vote.author.username === authentication.user.username);
+  
   return (
-    <section className={`post ${post.upvotes < 0 ? "post--downvoted" : ""}`}>
+    <section
+      className={`post ${
+        countVotes(postState.votes) < 0 ? "post--downvoted" : ""
+      }`}
+    >
       <div className="post__upvotes">
-        <button className="button upvotes--up" onClick={onVote(true)} disabled={!authentication.loggedIn}>▲</button>
-        <div className="upvotes__total">{post.votes.length}</div>
-        <button className="button upvotes--down" onClick={onVote(false)}>▼</button>
-        {post.selected ? <div className="selected">✅</div> : <></>}
+        <button
+          className="button upvotes--up"
+          onClick={onVote(true)}
+          disabled={disableUpvote}
+        >
+          ▲
+        </button>
+        <div className="upvotes__total">{countVotes(postState.votes)}</div>
+        <button className="button upvotes--down" onClick={onVote(false)} disabled={disableDownvote}>
+          ▼
+        </button>
+        {postState.selected ? <div className="selected">✅</div> : <></>}
       </div>
       <div className="post__body">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {post.content}
+          {postState.content}
         </ReactMarkdown>
       </div>
-      {post.type === "QUESTION" ? (
+      {postState.type === "QUESTION" ? (
         <button
           className="button action"
           onClick={(e) => {
             setAnswerFormOpen(true);
           }}
+          disabled={!authentication.loggedIn}
         >
           +Add Answer
         </button>
-      ) : post.selected ? (
-        <button className="button action" onClick={(e) => deselectAsAnswer()}>
+      ) : postState.selected ? (
+        <button
+          className="button action"
+          disabled={disableDeselect}
+          onClick={(e) => deselectAsAnswer()}
+        >
           ✓Deselect
         </button>
       ) : (
-        <button className="button action" onClick={(e) => selectAsAnswer()}>
+        <button
+          className="button action"
+          disabled={disableSelect}
+          onClick={(e) => selectAsAnswer()}
+        >
           ✓Select As Best Answer
         </button>
       )}
-      <Author author={post.author} postType={post.type} />
+      <Author author={postState.author} postType={postState.type} />
       <div className="post__comments">
-        {post.comments.map((comment) => (
+        {postState.comments.map((comment) => (
           <Comment key={comment.id} comment={comment} />
         ))}
-        <button className="button" onClick={(e) => setFormOpen(true)}>
+        <button className="button" onClick={(e) => setFormOpen(true)} disabled={!authentication.loggedIn}>
           +Add Comment
         </button>
       </div>
       <Dialog
-        key={`add-comment-${post.id}`}
+        key={`add-comment-${postState.id}`}
         open={isFormOpen}
         title={"Add Comment"}
         onCancel={() => setFormOpen(false)}
       >
-        <CommentForm
-          onSubmit={(result) => addComment(result)}
-        />
+        <CommentForm onSubmit={(result) => addComment(result)} />
       </Dialog>
       <Dialog
-        key={`create-answer-${post.id}`}
+        key={`create-answer-${postState.id}`}
         open={isAnswerFormOpen}
         title="Answer"
         onCancel={() => setAnswerFormOpen(false)}

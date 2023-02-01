@@ -12,7 +12,7 @@ class Datasource {
       redirect: 'follow'
     };
     
-    const response = await fetch("http://127.0.0.1:5000/articles", requestOptions)
+    const response = await fetch(`${process.env.REACT_APP_BACKEND}/articles`, requestOptions)
     const articles = await response.json();
     return articles;
   }
@@ -22,7 +22,7 @@ class Datasource {
       redirect: 'follow'
     };
     
-    const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}`, requestOptions)
+    const response = await fetch(`${process.env.REACT_APP_BACKEND}/articles/${articleId}`, requestOptions)
     const article = await response.json();
     this.#articleCache = article;
     return article;
@@ -35,7 +35,7 @@ class Datasource {
     
     const makeMe =  {
       title: question.title,
-      tags, // TODO tags
+      tags,
       posts: [question]
     }
     var raw = JSON.stringify(makeMe);
@@ -47,7 +47,7 @@ class Datasource {
       redirect: 'follow'
     };
     
-    const response = await fetch("http://127.0.0.1:5000/articles", requestOptions)
+    const response = await fetch(`${process.env.REACT_APP_BACKEND}/articles`, requestOptions)
     const article = await response.json()
     return article;
   }

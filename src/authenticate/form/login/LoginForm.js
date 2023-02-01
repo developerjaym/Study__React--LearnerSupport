@@ -2,7 +2,6 @@ import "./LoginForm.css";
 
 export default function LoginForm({onSubmit}) {
     const onFormSubmitted = event => {
-        // TODO replace with yup, formik
         event.preventDefault();
         const formData = Object.fromEntries(new FormData(event.target));
         onSubmit(formData);

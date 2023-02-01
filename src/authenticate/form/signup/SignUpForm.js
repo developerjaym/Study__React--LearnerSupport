@@ -4,7 +4,6 @@ import "./SignUpForm.css";
 export default function SignUpForm({onSubmit}) {
     const [passwords, setPasswords] = useState(['', ''])
     const onFormSubmitted = async event => {
-        // TODO replace with yup, formik
         event.preventDefault();
         const formData = Object.fromEntries(new FormData(event.target));
         onSubmit(formData);
@@ -14,15 +13,15 @@ export default function SignUpForm({onSubmit}) {
         <form className="form" onSubmit={onFormSubmitted}>
             <label className="form__label">
                 <span className="label__text">Desired Username</span>
-                <input className="form__input" name="username" autoComplete="new-username" required/>
+                <input minLength={5} className="form__input" name="username" autoComplete="new-username" required/>
             </label>
             <label className="form__label">
                 <span className="label__text">Email</span>
                 <input className="form__input" name="email" type="email" autoComplete="email" required/>
             </label>
             <label className="form__label">
-                <span className="label__text">Password</span>
-                <input className="form__input" name="password" type="password" autoComplete="new-password" required onChange={e => setPasswords(passwords => {
+                <span className="label__text">Password (6+ characters)</span>
+                <input minLength={6} className="form__input" name="password" type="password" autoComplete="new-password" required onChange={e => setPasswords(passwords => {
                     passwords[0] = e.target.value;
                     return [...passwords];
                 })}/>

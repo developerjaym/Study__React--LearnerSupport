@@ -70,7 +70,7 @@ class AuthenticationService {
       body: raw,
       redirect: "follow",
     };
-    const response = await fetch("http://127.0.0.1:5000/users", requestOptions);
+    const response = await fetch(`${process.env.REACT_APP_BACKEND}/users`, requestOptions);
     if (response.ok) {
       const result = await response.json();
       localStorage.setItem(AuthenticationService.#key, result.token);

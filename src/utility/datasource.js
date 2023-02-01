@@ -65,7 +65,7 @@ class Datasource {
       redirect: 'follow'
     };
     
-    const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/answers`, requestOptions)
+    const response = await fetch(`${process.env.REACT_APP_BACKEND}/articles/${articleId}/answers`, requestOptions)
     const post = await response.json()
     this.#articleCache.posts.push(post);
     return post;
@@ -84,7 +84,7 @@ class Datasource {
       redirect: 'follow'
     };
     
-    const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/posts/${postId}/comments`, requestOptions)
+    const response = await fetch(`${process.env.REACT_APP_BACKEND}/articles/${articleId}/posts/${postId}/comments`, requestOptions)
     comment = await response.json()
     this.#articleCache.posts.find(post => post.id === postId).comments.push(comment);
     return comment;
@@ -103,7 +103,7 @@ class Datasource {
       redirect: 'follow'
     };
     
-    const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/posts/${postId}/votes`, requestOptions)
+    const response = await fetch(`${process.env.REACT_APP_BACKEND}/articles/${articleId}/posts/${postId}/votes`, requestOptions)
     const voteResponse = await response.json()
     this.#articleCache.posts.find(post => post.id === postId).votes = this.#articleCache.posts.find(post => post.id === postId).votes.filter(vote => vote.author.username !== authentication.user.username);
     this.#articleCache.posts.find(post => post.id === postId).votes.push(voteResponse);
@@ -125,7 +125,7 @@ class Datasource {
     };
     
     try {
-      const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/posts/${postId}/selected`, requestOptions)
+      const response = await fetch(`${process.env.REACT_APP_BACKEND}/articles/${articleId}/posts/${postId}/selected`, requestOptions)
       await response.text()
       this.#articleCache?.posts?.forEach(post => post.selected = post.id === postId)
       return true;
@@ -145,7 +145,7 @@ class Datasource {
     };
     
     try {
-      const response = await fetch(`http://127.0.0.1:5000/articles/${articleId}/posts/${postId}/selected`, requestOptions)
+      const response = await fetch(`${process.env.REACT_APP_BACKEND}/articles/${articleId}/posts/${postId}/selected`, requestOptions)
       await response.text()
       this.#articleCache?.posts?.forEach(post => post.selected = false)
       return true;

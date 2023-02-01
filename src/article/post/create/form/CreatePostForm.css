@@ -1,0 +1,7 @@
+.tags-container {
+    display: flex;
+    column-gap: 1vmin;
+    row-gap: 1vmin;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}

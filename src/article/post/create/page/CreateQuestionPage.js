@@ -6,7 +6,7 @@ import "./CreatePostPage.css";
 export default function CreateQuestionPage() {
     const navigate = useNavigate();
     const onSubmit = async value => {
-        const {id} = await datasource.addArticle([], value); // TODO tags
+        const {id} = await datasource.addArticle(value.tags, value); // TODO tags
         navigate(`/question/${id}`)
     }
     return (<div className="page">

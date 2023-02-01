@@ -3,7 +3,7 @@ import "./SignUpForm.css";
 
 export default function SignUpForm({onSubmit}) {
     const [passwords, setPasswords] = useState(['', ''])
-    const onFormSubmitted = event => {
+    const onFormSubmitted = async event => {
         // TODO replace with yup, formik
         event.preventDefault();
         const formData = Object.fromEntries(new FormData(event.target));

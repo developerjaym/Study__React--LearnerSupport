@@ -52,8 +52,18 @@ code {
   width: 100%;
 }
 
+.form__input--container {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
 .form__input {
   align-self: stretch;
+}
+
+.form__input--container .form__input {
+  flex-grow: 2;
 }
 
 .form__input--tall {

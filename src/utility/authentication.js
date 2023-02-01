@@ -8,11 +8,13 @@ class AuthenticationService {
   }
   #tokenToUser(token) {
     if (token) {
-      const parsedToken = JSON.parse(
-        atob(token.split(".")[1])
-      );
-      if (parsedToken.exp * 1000 > new Date().getTime()) {
-        return parsedToken;
+      try {
+        const parsedToken = JSON.parse(atob(token.split(".")[1]));
+        if (parsedToken.exp * 1000 > new Date().getTime()) {
+          return parsedToken;
+        }
+      } catch (e) {
+        localStorage.removeItem(AuthenticationService.#key); // in case something bad gets in there
       }
     }
     return null;
@@ -28,13 +30,15 @@ class AuthenticationService {
     throw Error("not logged in");
   }
   get token() {
-    return localStorage.getItem(AuthenticationService.#key)
+    return localStorage.getItem(AuthenticationService.#key);
   }
   async logIn(credentials) {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", "Basic " + btoa(`${credentials.username}:${credentials.password}`));
-
+    myHeaders.append(
+      "Authorization",
+      "Basic " + btoa(`${credentials.username}:${credentials.password}`)
+    );
 
     const requestOptions = {
       method: "GET",
@@ -42,10 +46,18 @@ class AuthenticationService {
       redirect: "follow",
     };
 
-    const response = await fetch(`http://127.0.0.1:5000/users/${credentials.username}/token`, requestOptions);
-    const result = await response.json();
-    localStorage.setItem(AuthenticationService.#key, result.token)
-    this.#user = this.#tokenToUser(result.token);
+    const response = await fetch(
+      `http://127.0.0.1:5000/users/${credentials.username}/token`,
+      requestOptions
+    );
+    if (response.ok) {
+      const result = await response.json();
+      localStorage.setItem(AuthenticationService.#key, result.token);
+      this.#user = this.#tokenToUser(result.token);
+    } else {
+      console.error(response.status, response.statusText);
+      throw Error("Unable to log in");
+    }
   }
   async signUp(credentials) {
     const myHeaders = new Headers();
@@ -59,15 +71,15 @@ class AuthenticationService {
       body: raw,
       redirect: "follow",
     };
-      const response = await fetch("http://127.0.0.1:5000/users", requestOptions);
-      if(response.ok) {
-        const result = await response.json();
-        localStorage.setItem(AuthenticationService.#key, result.token)
-        this.#user = this.#tokenToUser(result.token);
-      } else {
-        console.error(response.status, response.statusText)
-        throw Error('Unable to sign up')
-      }
+    const response = await fetch("http://127.0.0.1:5000/users", requestOptions);
+    if (response.ok) {
+      const result = await response.json();
+      localStorage.setItem(AuthenticationService.#key, result.token);
+      this.#user = this.#tokenToUser(result.token);
+    } else {
+      console.error(response.status, response.statusText);
+      throw Error("Unable to sign up");
+    }
   }
   signOut() {
     this.#user = null;

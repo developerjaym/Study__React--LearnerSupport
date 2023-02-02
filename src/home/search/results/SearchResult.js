@@ -15,7 +15,7 @@ export default function SearchResult({ article }) {
         article.posts.find((post) => post.type === "QUESTION").author.username
       }`}
     >
-      <div className="markdown-container">
+      <div className="markdown-container preview">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {article.posts.find((post) => post.type === "QUESTION").content}
         </ReactMarkdown>

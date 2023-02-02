@@ -29,6 +29,12 @@ code {
   overflow-y: auto;
 }
 
+.preview {
+  max-height: 10vh;
+  overflow-y: clip;
+  max-width: 600px;
+}
+
 .form__title {
   font-size: x-large;
   font-weight: bold;

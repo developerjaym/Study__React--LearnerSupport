@@ -33,14 +33,14 @@ export default function Post({ post, onAnswerCreated, articleId, onSelectOrDesel
     }
   };
   const addComment = async (comment) => {
-    const commentResponse = await datasource.addComment(
+    await datasource.addComment(
       articleId,
       postState.id,
       comment
     );
     setPostState({
       ...postState,
-      comments: [...postState.comments, commentResponse],
+      comments: [...postState.comments],
     });
     setFormOpen(false);
   };

@@ -9,10 +9,10 @@ export default function Article() {
   const loadedArticle = useLoaderData();
   const [article, setArticle] = useState(loadedArticle);
   const onAnswerCreated = async (answer) => {
-    answer = await datasource.addAnswer(article.id, answer);
+    await datasource.addAnswer(article.id, answer);
     setArticle({
       ...article,
-      posts: [...article.posts, answer],
+      posts: [...article.posts],
     });
   };
   const onSelectOrDeselect = () => {

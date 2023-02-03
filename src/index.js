@@ -3,11 +3,13 @@ import * as ReactDOM from "react-dom/client";
 
 import {
   createHashRouter,
+  defer,
   Navigate,
   RouterProvider
 } from "react-router-dom";
 import App from "./App";
 import Article from "./article/Article";
+import ArticlePage from "./article/ArticlePage";
 import CreateQuestionPage from "./article/post/create/page/CreateQuestionPage";
 import Home from "./home/Home";
 import "./index.css";
@@ -21,8 +23,12 @@ const router = createHashRouter([
     children: [
       {
         path:"/question/:id",
-        element: <Article/>,
-        loader: async ({request, params}) => {return await datasource.getArticle(params.id)}
+        element: <ArticlePage/>,
+        loader: async ({request, params}) => {
+          return defer({
+            article: await datasource.getArticle(params.id)
+          })
+        }
       },
       {
         path:"/ask",
@@ -31,7 +37,11 @@ const router = createHashRouter([
       {
         path:"/",
         element: <Home/>,
-        loader: async ({request, params}) => {return await datasource.getAll()}
+        loader: async ({request, params}) => {
+          return defer({
+            all: await datasource.getAll()
+          })
+        }
       },
     ],
     errorElement:  <div className="page"><h1>ERROR</h1></div>

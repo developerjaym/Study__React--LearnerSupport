@@ -6,8 +6,7 @@ import "./Article.css";
 import ArticleHeader from "./header/ArticleHeader";
 import Post from "./post/Post";
 
-export default function Article() {
-  const loadedArticle = useLoaderData();
+export default function Article({loadedArticle}) {
   const [article, setArticle] = useState(loadedArticle);
   const [isLoading, setLoading] = useState(false);
   const onAnswerCreated = async (answer) => {

@@ -13,7 +13,7 @@ export default function Home() {
   let data = useLoaderData();
 
   return (
-    <React.Suspense fallback={<LoadingSymbol open={true} />}>
+    <React.Suspense fallback={<LoadingSymbol open={true}/>}>
       <Await resolve={data.all} errorElement={<h1>Error loading all</h1>}>
         {(articles) => {
           articles = articles.filter(

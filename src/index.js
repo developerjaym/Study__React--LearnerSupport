@@ -24,9 +24,9 @@ const router = createHashRouter([
       {
         path:"/question/:id",
         element: <ArticlePage/>,
-        loader: async ({request, params}) => {
+        loader: ({request, params}) => {
           return defer({
-            article: await datasource.getArticle(params.id)
+            article: datasource.getArticle(params.id)
           })
         }
       },
@@ -37,9 +37,9 @@ const router = createHashRouter([
       {
         path:"/",
         element: <Home/>,
-        loader: async ({request, params}) => {
+        loader: ({request, params}) => {
           return defer({
-            all: await datasource.getAll()
+            all: datasource.getAll()
           })
         }
       },

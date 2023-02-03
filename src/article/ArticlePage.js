@@ -5,7 +5,6 @@ import Article from "./Article";
 
 export default function ArticlePage() {
   const data = useLoaderData();
-
   return (
     <React.Suspense fallback={<LoadingSymbol open={true} />}>
       <Await resolve={data.article} errorElement={<h1>Error loading all</h1>}>

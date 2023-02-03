@@ -77,7 +77,7 @@ class AuthenticationService {
       this.#user = this.#tokenToUser(result.token);
     } else {
       console.error(response.status, response.statusText);
-      throw Error("Unable to sign up");
+      throw Error(`${response.status}`);
     }
   }
   signOut() {

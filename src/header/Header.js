@@ -14,6 +14,7 @@ export default function Header() {
   const [isSignUpOpen, setSignUpOpen] = useState(false);
   const [isErrorOpen, setErrorOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("Uknown Exception");
 
   const [loggedIn, setLoggedIn] = useState(authentication.loggedIn);
   const onSearch = (event) => {
@@ -79,6 +80,12 @@ export default function Header() {
               setLoading(false);
               window.location.reload();
             } catch (e) {
+              setLoading(false)
+              if (e.message === "409") {
+                setErrorMessage(`${creds.username} is already taken.`);
+              } else {
+                setErrorMessage("Unknown Exception");
+              }
               setErrorOpen(true);
             }
           }}
@@ -95,7 +102,9 @@ export default function Header() {
               setLoading(false);
               window.location.reload();
             } catch (e) {
+              setErrorMessage(e.message);
               setErrorOpen(true);
+              setLoading(false)
             }
           }}
         />
@@ -107,7 +116,7 @@ export default function Header() {
           }}
         >
           <h1>Something went wrong. Sorry.</h1>
-          <p>Try again?</p>
+          <p>{errorMessage}</p>
         </Dialog>
       </header>
       <LoadingSymbol open={isLoading} />
